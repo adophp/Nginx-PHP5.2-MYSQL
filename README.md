@@ -74,7 +74,7 @@ libjpeg-dev libpng12-dev libfreetype6-dev libmysqlclient-dev libcurl4-gnutls-dev
 ```
 #tar -xzvf nginx-1.12.1.tar.gz
 #cd nginx-1.12.1
-#./configure --prefix=/usr/local/nginx --with-pcre=../pcre-8.00 --with-zlib=../zlib-1.2.11
+#./configure --prefix=/usr/local/nginx --with-http_ssl_module --with-pcre=../pcre-8.00 --with-zlib=../zlib-1.2.11
 #make
 #make install
 #make clean

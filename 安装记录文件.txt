@@ -1,7 +1,7 @@
-1、apt-get install gcc g++ make libssl-dev bison build-essential libncurses5-dev cmake autoconf m4
+﻿1、apt-get install gcc g++ make libssl-dev bison build-essential libncurses5-dev cmake autoconf m4
 2、安装 pcre zlib
 3、编译nginx
-./configure --prefix=/usr/local/nginx --with-pcre=../pcre-8.00 --with-zlib=../zlib-1.2.11
+./configure --prefix=/usr/local/nginx --with-http_ssl_module --with-pcre=../pcre-8.00 --with-zlib=../zlib-1.2.11
 make
 make install
 
