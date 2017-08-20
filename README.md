@@ -118,7 +118,9 @@ apt-get install mysql-server
  --with-zlib --with-libxml-dir=/usr --with-xmlrpc --enable-zip --enable-fastcgi --enable-fpm --enable-xml \
  --enable-sockets --with-gd --with-zlib --with-iconv=/usr/local/libiconv-1.13.1 --enable-zip \
  --with-freetype-dir=/usr/lib/ --enable-soap --enable-pcntl --enable-cli --with-curl
-
+//注意看过程是否有组件未安装，及时补上
+#make
+#make install
 #strip /usr/local/php/bin/php-cgi
 #cp php.ini-recommended /usr/local/php/etc/php.ini
 
