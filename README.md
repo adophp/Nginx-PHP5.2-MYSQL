@@ -10,7 +10,7 @@ linux下配置nginx php5.2 mysql环境
 
 安装过程我们所在位置为/dutuwang/install
 
-站点目录为：/dutuwang/wwwroot/shop,可能服务器上有很多网站需要放这里的目录就取名shop
+站点目录为：/dutuwang/wwwroot/shop,可能服务器上有很多网站需要放,所以我在这里就随便取了一个名shop
 
 ```
 apt-get update
@@ -128,9 +128,47 @@ apt-get install mysql-server
 
 主体安装完成，下面就是一些配置信息
 
+vi /etc/php5/etc/php-fpm.conf
+<!-- <value name="user"></value> -->
+<!-- <value name="group">nobody</value> -->  
+默认与nginx.conf 用户名 一致，都为nobody修改为：
+<value name="user">nobody</value>
+<value name="group">nobody</value>
+
+添加php加速器
+
+```
+#tar -xzvf eaccelerator-eaccelerator-42067ac.tar.gz -C /dutuwang/install/eaccelerator
+#cd eaccelerator
+#/usr/local/php/bin/phpize
+#./configure --enable-shared --with-php-config=/usr/local/php/bin/php-config
+#make && make install
+#make clean
+
+```
+
+在php.ini中添加eaccelerator配置信息,注意extensio的位置
+
+```
+extension="lib/php/extensions/no-debug-non-zts-20060613/eaccelerator.so"
+eaccelerator.shm_size="128"
+eaccelerator.cache_dir="/tmp/eaccelerator"
+eaccelerator.enable="1"
+eaccelerator.optimizer="1"
+eaccelerator.check_mtime="1"
+eaccelerator.debug="0"
+eaccelerator.filter="*.php"
+eaccelerator.shm_max="0"
+eaccelerator.shm_ttl="0"
+eaccelerator.shm_prune_period="0"
+eaccelerator.shm_only="0"
+
+;这里是control.php所有的目录,control.php在安装包里面需要拷贝到此目录，用户与密码在文件内
+eaccelerator.allowed_admin_path="/dtw/wwwroot/shop/"
+```
 
 
-
+mysql php-fpm nginx的配置参数就需要根据自己的服务器来设定了，请查看“原始安装记录文件.txt”里面的部分链接
 
 
 
