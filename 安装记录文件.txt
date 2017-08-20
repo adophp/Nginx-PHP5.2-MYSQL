@@ -153,8 +153,3 @@ eaccelerator.shm_only="0"
 
 ;这里是control.php所有的目录,control.php在安装包里面需要拷贝到此目录，用户与密码在文件内
 eaccelerator.allowed_admin_path="/dtw/wwwroot/shop/"
-
-
-
-服务器密码：CQdm123456
-数据库密码: sanxingshop
