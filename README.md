@@ -1,4 +1,4 @@
-# Nginx PHP5.2 MYSQL安装
+# Nginx PHP5.2.17 MYSQL安装
 
 linux下配置nginx php5.2 mysql环境
 
