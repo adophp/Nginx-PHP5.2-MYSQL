@@ -1,0 +1,160 @@
+1、apt-get install gcc g++ make libssl-dev bison build-essential libncurses5-dev cmake autoconf m4
+2、安装 pcre zlib
+3、编译nginx
+./configure --prefix=/usr/local/nginx --with-pcre=../pcre-8.00 --with-zlib=../zlib-1.2.11
+make
+make install
+
+4、mysql安装,要输入两次密码
+apt-get install mysql-server mysql-client
+vi /etc/mysql/my.cnf
+#bind-address = 127.0.0.1
+修改数据库root的Host为%
+
+5、php安装,php5需要ubuntu14.04以下
+apt-get install libxml2 libxml2-dev
+
+#因为前面安装了libssl-dev
+ln -s /usr/lib/x86_64-linux-gnu/libssl.so  /usr/lib
+
+apt-get install libjpeg-dev
+ln -s /usr/lib/x86_64-linux-gnu/libjpeg.so  /usr/lib
+
+apt-get install libpng12-dev
+ln -s /usr/lib/x86_64-linux-gnu/libpng.so  /usr/lib
+
+apt-get install libfreetype6-dev
+ln -sf /usr/include/freetype2 /usr/include/freetype2/freetype
+
+apt-get install libmysqlclient-dev
+ln -s /usr/lib/x86_64-linux-gnu/libmysqlclient.so /usr/lib
+
+wget http://php-fpm.org/downloads/php-5.2.17-fpm-0.5.14.diff.gz
+gzip -cd php-5.2.17-fpm-0.5.14.diff.gz | patch -d php-5.2.17 -p1
+
+报错：php-5.2.17/ext/dom/node.c:1953:21: error: dereferencing pointer to incomplete type     ret = buf->bu
+解决：
+curl -o php-5.2.17.patch https://mail.gnome.org/archives/xml/2012-August/txtbgxGXAvz4N.txt
+cd php-5.2.17/
+patch -p0 -b < ../php-5.2.17.patch
+http://blog.csdn.net/moqiang02/article/details/19699557
+
+报错:make: *** [sapi/cgi/php-cgi] Error 1
+wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.13.1.tar.gz
+tar -zxvf libiconv-1.13.1.tar.gz
+cd libiconv-1.13.1
+./configure --prefix=/usr/local/libiconv-1.13.1
+make && make install
+接下来再编绎php的时候加上-–with-iconv=/usr/local/libiconv-1.13.1
+http://blog.sina.com.cn/s/blog_998c49430101cp45.html
+
+报错：php-5.2.17/ext/openssl/xp_ssl.c:357: undefined reference to `SSLv2_server_method'
+php-5.2.17/ext/openssl/xp_ssl.c:337: undefined reference to `SSLv2_client_method'
+这个需要一个补丁禁用openssl的SSLv2_client_method，方法如下：
+wget http://www.centos.bz/wp-content/uploads/2012/06/debian_patches_disable_SSLv2_for_openssl_1_0_0.patch
+cd php-5.2.17/
+patch -p1 < ../debian_patches_disable_SSLv2_for_openssl_1_0_0.patch
+http://blog.csdn.net/yunfengzhu/article/details/10148759
+
+报错：Please reinstall the libcurl distribution - easy.h should be in <curl-dir>/include/curl/
+apt-get install libcurl4-gnutls-dev
+http://10000001.blog.51cto.com/4600383/1405420
+
+error: mcrypt.h not found. Please reinstall libmcrypt.
+下载lib包 https://sourceforge.net/projects/mcrypt/files/Libmcrypt/2.5.8/
+#解压  
+tar -zxvf libmcrypt-2.5.8.tar.gz   
+#进入目录  
+cd libmcrypt-2.5.8 
+#编译（默认安装到/usr/local/lib/）  
+./configure --prefix=/usr/local/libmcrypt-2.5.8 
+#执行安装  
+make && make install
+
+sudo ./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-mbstring --with-mcrypt=/usr/local/libmcrypt-2.5.8 --enable-ftp --with-gd --with-jpeg-dir=/usr --with-png-dir=/usr --with-mysql=/usr/bin/ --with-mysqli=/usr/bin/mysql_config --with-openssl-dir=/usr --with-openssl --with-pdo-mysql --with-pear --enable-sockets --with-freetype-dir=/usr --enable-gd-native-ttf --with-zlib --with-libxml-dir=/usr --with-xmlrpc --enable-zip --enable-fastcgi --enable-fpm --enable-xml --enable-sockets --with-gd --with-zlib --with-iconv=/usr/local/libiconv-1.13.1 --enable-zip --with-freetype-dir=/usr/lib/ --enable-soap --enable-pcntl --enable-cli --with-curl
+
+完成后需要修改
+strip /usr/local/php/bin/php-cgi
+cp php.ini-recommended /usr/local/php/lib/php/php.ini
+
+
+vi /etc/php5/etc/php-fpm.conf
+<!-- <value name="user"></value> -->
+<!-- <value name="group">nobody</value> -->  
+默认与nginx.conf 用户名 一致，都为nobody修改为：
+<value name="user">nobody</value>
+<value name="group">nobody</value>
+
+修改项目目录权限
+chmod -R 777 mobile/data/compiled
+chmod -R 777 wapMobile/data/caches
+
+安全：https://www.ubuntufree.com/how-to-stop-a-ddos-attack-on-ubuntu/
+https://help.aliyun.com/knowledge_detail/39428.html
+
+首先使用以下代码，找出攻击者IP
+netstat -ntu | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -n
+
+配置：http://www.x83.net/nginx-php-5-2-17-php-fpm/
+日志：http://blog.csdn.net/qing419925094/article/details/41977999
+
+优化：
+https://blog.tanteng.me/2016/03/php-fpm-conf/
+
+http://cache.baiducontent.com/c?m=9d78d513d9811bed4fece4791a17a771192397624cd6c7150e96c90a84652b564710f4ba5776525bc4c50d3443fc1806bde73702200356a09ab8d61184ec866f6fd6286e365ac45613a004b28e0360d620e700baa41cf0ba8763cef1cfd5de5558dd537220c6afd5&p=882a9546d58008fc57ef8e6d4e5f89&newp=866dc11880904ead08e2947d0e5281231610db2151d4d0166b82c825d7331b001c3bbfb423241702d4c37a6101ad4358eaf43c79370923a3dda5c91d9fb4c57479&user=baidu&fm=sc&query=php5%2E3+php-fpm+apache-like&qid=8096219b0001a1c8&p1=1
+
+http://www.cnblogs.com/52php/p/5675313.html
+mysql压力测试
+mysqlslap -a -x 10 -y 3 -c 500 -i 10 -uroot -p
+
+解决mysql 1040错误Too many connections的方法
+http://www.jb51.net/article/31365.htm
+
+MySQL server has gone away
+https://dev.mysql.com/doc/refman/5.7/en/packet-too-large.html
+
+nginx:阿里云服务器已经进行过内核优化无须再次操作
+http://blog.csdn.net/xifeijian/article/details/20956605
+nginx——php压力测试
+ab -c 10000 -n 30000 -k http://shop.zgsanxin.com/phpinfo.php
+10000的并发30000的请求数
+
+
+阿里云虚拟内存
+https://segmentfault.com/a/1190000000670332 添加swap分区
+http://www.07net01.com/2016/04/1456215.html
+
+php加速器
+http://www.linuxidc.com/Linux/2015-01/111366.htm
+https://github.com/eaccelerator/eaccelerator
+https://github.com/eaccelerator/eaccelerator/wiki/InstallFromSource
+
+添加扩展：
+扩展包路径执行
+/usr/local/php/bin/phpize
+./configure --enable-shared --with-php-config=/usr/local/php/bin/php-config
+make && make install
+
+
+
+添加在php.ini  Dynamic Extensions里面，注意路径
+extension="lib/php/extensions/no-debug-non-zts-20060613/eaccelerator.so"
+eaccelerator.shm_size="128"
+eaccelerator.cache_dir="/tmp/eaccelerator"
+eaccelerator.enable="1"
+eaccelerator.optimizer="1"
+eaccelerator.check_mtime="1"
+eaccelerator.debug="0"
+eaccelerator.filter="*.php"
+eaccelerator.shm_max="0"
+eaccelerator.shm_ttl="0"
+eaccelerator.shm_prune_period="0"
+eaccelerator.shm_only="0"
+
+;这里是control.php所有的目录,control.php在安装包里面需要拷贝到此目录，用户与密码在文件内
+eaccelerator.allowed_admin_path="/dtw/wwwroot/shop/"
+
+
+
+服务器密码：CQdm123456
+数据库密码: sanxingshop
