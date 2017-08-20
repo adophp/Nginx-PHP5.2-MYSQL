@@ -174,13 +174,13 @@ mysql php-fpm nginx的配置参数就需要根据自己的服务器来设定了�
 相当启动位置
 ```
 //nginx
-/usr/local/nginx/sbin/nginx
+#/usr/local/nginx/sbin/nginx
 
 //php-fpm
-/usr/local/php/sbin/php-fpm start
+#/usr/local/php/sbin/php-fpm start
 
 //mysql
-service mysql start
+#service mysql start
 
 ```
 
