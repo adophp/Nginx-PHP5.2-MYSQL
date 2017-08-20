@@ -171,6 +171,17 @@ eaccelerator.allowed_admin_path="/dtw/wwwroot/shop/"
 mysql php-fpm nginx的配置参数就需要根据自己的服务器来设定了，请查看“原始安装记录文件.txt”里面的部分链接
 
 
+相当启动位置
+```
+//nginx
+/usr/local/nginx/sbin/nginx
 
+//php-fpm
+/usr/local/php/sbin/php-fpm start
+
+//mysql
+service mysql start
+
+```
 
 
