@@ -185,3 +185,37 @@ mysql php-fpm nginx的配置参数就需要根据自己的服务器来设定了�
 ```
 
 
+添加ftp
+```
+apt-get install vsftpd
+```
+添加用户：
+```
+useradd -d /opt/reconciliation -s /sbin/nologin -g ftpGroup -G root ftpUser
+```
+修改用户主目录：
+```
+chown -R ftpUser /dtw/wwwroot
+```
+
+主目录限制参考：http://blog.csdn.net/bluishglc/article/details/42398811
+```
+#chroot_local_user=YES
+chroot_list_enable=YES
+# (default follows)
+chroot_list_file=/etc/vsftpd.chroot_list
+```
+
+登录权限限制：
+```
+write_enable=YES
+userlist_enable=YES
+userlist_deny=NO
+userlist_file=/etc/vsftpd.user_list
+allow_writeable_chroot=YES
+```
+vsftpd.chroot_list与vsftpd.user_list添加用户
+
+ftpUser
+
+修改完成后重启vsftpd
