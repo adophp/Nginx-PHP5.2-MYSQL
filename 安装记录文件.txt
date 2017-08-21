@@ -100,6 +100,12 @@ netstat -ntu | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -n
 
 优化：
 https://blog.tanteng.me/2016/03/php-fpm-conf/
+https://blog.linuxeye.cn/380.html
+Mem=`free -m | awk '/Mem:/{print $2}'` #我的机器内存是987M
+sed -i "s@^pm.max_children.*@pm.max_children = $(($Mem/2/20))@" $php_install_dir/etc/php-fpm.conf
+sed -i "s@^pm.start_servers.*@pm.start_servers = $(($Mem/2/30))@" $php_install_dir/etc/php-fpm.conf
+sed -i "s@^pm.min_spare_servers.*@pm.min_spare_servers = $(($Mem/2/40))@" $php_install_dir/etc/php-fpm.conf
+sed -i "s@^pm.max_spare_servers.*@pm.max_spare_servers = $(($Mem/2/20))@" $php_install_dir/etc/php-fpm.conf
 
 http://cache.baiducontent.com/c?m=9d78d513d9811bed4fece4791a17a771192397624cd6c7150e96c90a84652b564710f4ba5776525bc4c50d3443fc1806bde73702200356a09ab8d61184ec866f6fd6286e365ac45613a004b28e0360d620e700baa41cf0ba8763cef1cfd5de5558dd537220c6afd5&p=882a9546d58008fc57ef8e6d4e5f89&newp=866dc11880904ead08e2947d0e5281231610db2151d4d0166b82c825d7331b001c3bbfb423241702d4c37a6101ad4358eaf43c79370923a3dda5c91d9fb4c57479&user=baidu&fm=sc&query=php5%2E3+php-fpm+apache-like&qid=8096219b0001a1c8&p1=1
 

@@ -111,6 +111,7 @@ apt-get install mysql-server
 #patch -p1 < ../debian_patches_disable_SSLv2_for_openssl_1_0_0.patch
 
 //主角
+5.2.17
 #./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-mbstring \
  --with-mcrypt=/usr/local/libmcrypt-2.5.8 --enable-ftp --with-gd --with-jpeg-dir=/usr \
  --with-png-dir=/usr --with-mysql=/usr/bin/ --with-mysqli=/usr/bin/mysql_config --with-openssl-dir=/usr \
@@ -118,6 +119,17 @@ apt-get install mysql-server
  --with-zlib --with-libxml-dir=/usr --with-xmlrpc --enable-zip --enable-fastcgi --enable-fpm --enable-xml \
  --enable-sockets --with-gd --with-zlib --with-iconv=/usr/local/libiconv-1.13.1 --enable-zip \
  --with-freetype-dir=/usr/lib/ --enable-soap --enable-pcntl --enable-cli --with-curl
+
+5.5.38
+#wget http://cn2.php.net/distributions/php-5.5.38.tar.gz
+#./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-mbstring \
+ --with-mcrypt=/usr/local/libmcrypt-2.5.8 --enable-ftp --with-gd --with-jpeg-dir=/usr \
+ --with-png-dir=/usr --with-mysql --with-mysqli --with-openssl-dir=/usr \
+ --with-openssl --with-pdo-mysql --with-pear --enable-sockets --with-freetype-dir=/usr --enable-gd-native-ttf \
+ --with-zlib --with-libxml-dir=/usr --with-xmlrpc --enable-zip --enable-fpm --enable-xml \
+ --enable-sockets --with-gd --with-zlib --with-iconv=/usr/local/libiconv-1.13.1 --enable-zip \
+ --with-freetype-dir=/usr/lib/ --enable-soap --enable-pcntl --enable-cli --with-curl --enable-opcache
+
 //注意看过程是否有组件未安装，及时补上
 #make
 #make install
@@ -176,8 +188,14 @@ mysql php-fpm nginx的配置参数就需要根据自己的服务器来设定了�
 //nginx
 #/usr/local/nginx/sbin/nginx
 
+//php 5.3.3 下的php-fpm 不再支持 php-fpm 以前具有的 /usr/local/php/sbin/php-fpm (start|stop|reload)等命令，需要使用信号控制：http://blog.csdn.net/heirenheiren/article/details/8057506
 //php-fpm
 #/usr/local/php/sbin/php-fpm start
+5.5重启php-fpm
+#killall php-fpm
+#/usr/local/php/sbin/php-fpm
+平滑重启:
+#kill -USR2 `cat /usr/local/php/var/run/php-fpm.pid`
 
 //mysql
 #service mysql start
